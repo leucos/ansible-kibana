@@ -1,0 +1,19 @@
+---
+
+dependencies:
+  - src: git+https://github.com/leucos/ansible-nginx.git
+    version: origin/master
+    name: ansible-nginx
+
+galaxy_info:
+  author: Michel Blanc
+  company: devops.works
+  description: ansible-kibana role
+  license: MIT
+  min_ansible_version: 1.6
+  platforms:
+  - name: Ubuntu
+    versions:
+    - all
+  categories:
+  - web

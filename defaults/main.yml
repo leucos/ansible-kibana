@@ -1,0 +1,15 @@
+# Choose version
+kibana_version: 5.x
+
+kibana_plugins: []
+
+# Repo
+kibana_repo_path: "deb https://artifacts.elastic.co/packages/{{ kibana_version }}/apt stable main"
+
+kibana_server_host: 127.0.0.1
+kibana_server_port: 5601
+
+kibana_behind_nginx: true
+kibana_nginx_port: 1234
+
+kibana_nginx_users: []

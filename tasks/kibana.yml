@@ -1,0 +1,54 @@
+- name: Adds repository key
+  apt_key:
+    url: '{{ kibana_repo_key }}'
+    state: present
+
+- name: Adds repos
+  apt_repository:
+    repo: "{{ kibana_repo_path }}"
+    update_cache: yes
+
+- name: Installs kibana
+  apt:
+    pkg: kibana
+    state: present
+
+- name: Adds kibana config
+  template:
+    src: kibana.yml.j2
+    dest: /etc/kibana/kibana.yml
+  notify: Restart Kibana
+
+- name: Enables kibana at boot
+  service:
+    name: kibana
+    enabled: true
+
+- name: Installs plugins
+  command: /usr/share/kibana/bin/kibana-plugin install {{ item }}
+  with_items: "{{ kibana_plugins }}"
+
+- name: Adds nginx config
+  template:
+    src: nginx_kibana.conf.j2
+    dest: /etc/nginx/sites-available/kibana.conf
+  notify:
+    - Restart nginx
+
+- name: Symlinks nginx config
+  file:
+    src: /etc/nginx/sites-available/kibana.conf
+    dest: /etc/nginx/sites-enabled/kibana.conf
+    state: link
+  notify:
+    - Restart nginx
+
+- name: Adds nginx users
+  htpasswd:
+    path: /etc/nginx/kibana.users
+    name: "{{ item.name }}"
+    password: "{{ item.password }}"
+    owner: root
+    group: www-data
+    mode: 0640
+  with_items: "{{ kibana_nginx_users }}"
