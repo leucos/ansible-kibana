@@ -24,8 +24,13 @@
     name: kibana
     enabled: true
 
+- name: Get plugin list
+  command: /usr/share/kibana/bin/kibana-plugin list
+  register: __kibana_plugin_list
+
 - name: Installs plugins
-  command: /usr/share/kibana/bin/kibana-plugin install {{ item }}
+  command: /usr/share/kibana/bin/kibana-plugin install {{ item.url }}
+  when: item.name not in __kibana_plugin_list
   with_items: "{{ kibana_plugins }}"
 
 - name: Adds nginx config
