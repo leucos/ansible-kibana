@@ -32,6 +32,8 @@
   command: /usr/share/kibana/bin/kibana-plugin install {{ item.url }}
   when: item.name not in __kibana_plugin_list
   with_items: "{{ kibana_plugins }}"
+  notify:
+    - Restart Kibana
 
 - name: Adds nginx config
   template:
